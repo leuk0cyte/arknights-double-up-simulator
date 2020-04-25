@@ -1,17 +1,17 @@
 // written by leuk0cyte, 2020
-// ������ּ��ģ���ȡ���շ���˫up��
-// ����ļ��е�ÿһ�����ִ���һ����ͬ������ڼ��뱾��up���������ǵĹ�����
-//  �ó����ܼƳ�ȡ�Ĵ���
-// �������㹻��һ�ڴ���һ����β��Խ����������֮���ڣ���Ƶ�������ڸ���
-// ���ݴ�������ʹ��matlab
-// ���к�Ŀ¼�л�����һ��logfile����һ���ǳ�ȡ����
-//  �ڶ����Ǹó�ȡ���µ������Ŀ�����������ۼƷֲ�����
-// ����ʹ��gcc����
+// 本程序旨在模拟抽取明日方舟双up池
+// 输出文件中的每一个数字代表一个不同的玩家在集齐本次up的两个六星的过程中
+//  该池中总计抽取的次数
+// 样本数足够大（一亿次与一百万次测试结果相差在万分之五内），频率趋近于概率
+// 数据处理建议使用matlab
+// 运行后目录中会生成一个logfile，第一排是抽取数，
+//  第二排是该抽取数下的玩家数目，第三排是累计分布函数
+// 建议使用gcc编译
 
-// v2 ˵����
-//  v2 ��ÿһ�β��Ժ�ֱ�ӽ���ͳ�ƣ��Կ�һ��
-// v3 ˵���� 2020��4��25��
-//  v3 �ڳ���������������˵�������������ԡ�
+// v2 说明：
+//  v2 在每一次测试后直接进行统计，稍快一点
+// v3 说明： 2020年4月25日
+//  v3 在程序内添加了文字说明，增加易用性。
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -35,24 +35,24 @@ bool randtest(double ptrue) {
 		return true;
 	}
 }
-//������Ժ���������Ϊ��ĸ��ʣ�����һ��������ԵĽ���Ƿ�Ϊ��
+//随机测试函数，输入为真的概率，返回一次随机测试的结果是否为真
 
 int main(char argc,char** argv){
 	printf("written by leuk0cyte, 2020\n\n\
-	������ּ��ģ���ȡ���շ���˫up��\n\
-	ԭ���Ǽ����ģ���ڳ����ڽ��г鿨���ӵ�1�鿪ʼ������Ϊֹ����¼�´�ʱ�ĳ�ȡ�����ظ�n��\n\
-	nĬ����һ����Σ����Թ��õ�Ҳ����ͨ�����뱾������������������n��ֵ\n\
-	���ڱ�Ŀ¼������PowerShell����סShift�����ļ��������ı�Ŀ¼�а�����Ҽ��������롰./�����������.exe 1e9�������趨nΪʮ��\n\
-	����ʵһ����ε�����Ҳ�㹻��һ�ڴ���һ����β��Խ����������֮���ڣ���Ƶ�������ڸ���\n\
-	���б���������Ŀ¼�²���logfile.txt����ʹ��excel������ļ�\n\
-	��һ�Ŵ�����ȡ�������ڸó��ӱ��׼�����Ϊ0������¿�ʼ��ȡ���ȡ�Ĵ���\n\
-	�ڶ��Ŵ����ڸó�ȡ���³�������up���ǵ��������\n\
-	�����Ŵ����ó�ȡ������Ӧ�ġ�xx���ڳ����������ǡ�����¼����ۼƷֲ�������ֵ\n\
+	本程序旨在模拟抽取明日方舟双up池\n\
+	原理是计算机模拟在池子内进行抽卡，从第1抽开始，抽齐为止，记录下此时的抽取数，重复n次\n\
+	n默认是一百万次，电脑够好的也可以通过给与本程序启动参数来增加n的值\n\
+	如在本目录下启动PowerShell（按住Shift键在文件管理器的本目录中按鼠标右键），输入“./本程序的名字.exe 1e9”，来设定n为十亿\n\
+	但其实一百万次的样本也足够大（一亿次与一百万次测试结果相差在万分之五内），频率趋近于概率\n\
+	运行本程序后会在目录下产生logfile.txt，请使用excel打开这个文件\n\
+	第一排代表抽取数，即在该池子保底计数器为0的情况下开始抽取后抽取的次数\n\
+	第二排代表在该抽取数下抽齐两个up六星的试验次数\n\
+	第三排代表该抽取数所对应的“xx抽内抽齐两个六星”这个事件的累计分布函数的值\n\
 	Please have fun!\n\n\n\
-	���س����������桭��\
+	按回车键启动仿真……\
 	");
 	getchar();
-	printf("������\n\n\n");
+	printf("启动！\n\n\n");
 
 	uint64_t TEST_TIMES;
 	if (argc>1)
@@ -61,7 +61,7 @@ int main(char argc,char** argv){
 	}else
 	{
 		TEST_TIMES = 1e6;
-	}//Ĭ�ϲ��Դ���һ�����
+	}//默认测试次数一百万次
 	
 	double run_time;
 	clock_t time_start, time_stop;
@@ -69,21 +69,21 @@ int main(char argc,char** argv){
 
 	if ((logfile=fopen("logfile.txt", "w")) == NULL)
 	{
-		printf("û�в���logfile�ļ���Ȩ�ޣ������Թ���Ա����,���߰ѳ�����ڱ�ĵط�������\n");
+		printf("没有产生logfile文件的权限！试试以管理员身份,或者把程序放在别的地方启动？\n");
 		goto a;
 	}
 	double p0 = 0.02;
-	// ������ǵ�ԭʼ����
+	// 获得六星的原始概率
 	double p1 = 0.02;
-	// 50���ĸ��ʲ���
+	// 50抽后的概率补偿
 	double p2 = 0.7;
-	// ���up�����ǵĸ���
+	// 抽出up的六星的概率
 	double p3 = 0.5;
-	// up�У���ĸ���
+	// up中，年的概率
 	double p4 = 1 - p3;
-	// up�У����ĸ���
+	// up中，阿的概率
 
-	srand((unsigned)time(NULL));//���������������
+	srand((unsigned)time(NULL));//重设随机数计数器
 
 	double p[99];
 	for (int i = 0; i < 49; i++)
@@ -95,9 +95,9 @@ int main(char argc,char** argv){
 		p[i] = p0 + p1 * (i - 49);
 	}
 
-	//��ʼ����
+	//开始测试
 	uint64_t* const X = (uint64_t*)malloc(sizeof(uint64_t) * TEST_TIMES);
-	//Ҫ����ռ䣬������Խ��
+	//要个大空间，储存测试结果
 
     int ylen = 3000;
     uint64_t Y[3001];
@@ -145,7 +145,7 @@ int main(char argc,char** argv){
 	// for (size_t i = 0; i < TEST_TIMES; i++)
 	// {
 	// 	fprintf(logfile, "%llu\t", X[i]);
-	// }//���һ����д��Ӳ�̣�һ�ڴβ��Բ����������ļ�Լ360MB
+	// }//结果一次性写入硬盘，一亿次测试产生的数据文件约360MB
 
 	
 	double Z[3001];
@@ -158,17 +158,17 @@ int main(char argc,char** argv){
 	for (size_t i = 2; i < 3000 + 1; i++)
 	{
 		fprintf(logfile, "%li\t", i);
-	}// ���ô���
+	}// 所用次数
 	fprintf(logfile, "\n");
 	for (size_t i = 2; i < ylen + 1; i++)
 	{
 		fprintf(logfile, "%lu\t", Y[i]);
-	}// �ô����µ�����
+	}// 该次数下的人数
 	fprintf(logfile, "\n");
 	for (size_t i = 2; i < ylen + 1; i++)
 	{
 		fprintf(logfile, "%e\t", Z[i]);
-	}// �ۼƷֲ�
+	}// 累计分布
     fprintf(logfile, "\n");
     for (size_t i = 0; i < TEST_TIMES; i++)
     {
@@ -179,17 +179,17 @@ int main(char argc,char** argv){
         {
             fprintf(logfile, "%lu\t", X[i]);
         }  
-    }//��������
-	// ¼���ļ�
+    }//究极非酋
+	// 录入文件
 	
 
 a:
-    time_stop = clock();	//��ʱ����
+    time_stop = clock();	//计时结束
 	run_time = (double)(time_stop - time_start)/CLOCKS_PER_SEC * 1e3;
 	//
 	printf("run_time: %fms\n",run_time);
-	printf("�����ѽ�������ȷ��Ŀ¼�����ɵ�logfile.txt\n\
-	���س����˳�������\
+	printf("仿真已结束！请确认目录下生成的logfile.txt\n\
+	按回车键退出本程序。\
 	");
 	getchar();
 
