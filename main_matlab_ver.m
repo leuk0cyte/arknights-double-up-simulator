@@ -56,6 +56,7 @@ for i = 1:length(Y(1,:))
 end
 
 E = Y(1,:)*Y(2,:)'/N;
+fprintf("抽齐双up的数学期望为：%f",E);
 % 抽齐双up的数学期望
 
 plot(Z(1,:),Z(2,:));
