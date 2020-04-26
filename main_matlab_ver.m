@@ -27,7 +27,7 @@ for i = 1:N % 测试循环
     while sum(flag) ~= 0
         for j = 1:99
             if randtest(p(j))==1 % 抽出六星
-                k = k + j; % 保底计数器归零
+                k = k + j; 
                 if randtest(p2)==1 % 抽出up
                     if randtest(p3)==1 % 抽出年
                         flag(1) = 0;
@@ -37,6 +37,7 @@ for i = 1:N % 测试循环
                         break;
                     end
                 end
+                break; % 保底计数器归零
             end
         end
     end
