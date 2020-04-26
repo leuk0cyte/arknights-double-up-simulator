@@ -12,6 +12,7 @@
 //  v2 在每一次测试后直接进行统计，稍快一点
 // v3 说明： 2020年4月25日
 //  v3 在程序内添加了文字说明，增加易用性。
+//  2020年4月26日更正：修复了在抽出非up六星时保底计数器不会归0的问题
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -96,8 +97,8 @@ int main(char argc,char** argv){
 	}
 
 	//开始测试
-	uint64_t* const X = (uint64_t*)malloc(sizeof(uint64_t) * TEST_TIMES);
-	//要个大空间，储存测试结果
+	uint64_t* const X = (uint64_t*)calloc(TEST_TIMES, sizeof(uint64_t));
+	//X记录抽取数大于3000的究极非酋
 
     int ylen = 3000;
     uint64_t Y[3001];
@@ -129,6 +130,7 @@ int main(char argc,char** argv){
 							break;
 						}
 					}
+					break; //三个break都是使保底计数器归零
 				}
 			}
 		}
